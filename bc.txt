@@ -1,0 +1,29 @@
+app.post('/insert-lead', async (req, res) => {
+      const leadData = req.body;
+      const { title, description, selectedUser, deadlineDays, status, file } = leadData;
+
+      try {
+        // Create a new lead object with the selected user's name and other fields
+        const newLead = new LeadModel({
+          title,
+          description,
+          assignedUser: selectedUser,
+          deadlineDays,
+          status,
+          file: {
+            data: Buffer.from(file, 'base64'), // Store the binary data of the file
+            contentType: 'application/octet-stream', // You can change this content type accordingly
+            fileName: 'uploaded_file.bin', // You can generate a proper file name here
+          },
+        });
+
+        // Save the lead object to the database
+        const insertedLead = await newLead.save();
+
+        // Send a response
+        res.status(201).json(insertedLead);
+      } catch (err) {
+        console.error('Error inserting lead:', err);
+        res.status(500).send('Error inserting lead');
+      }
+    });

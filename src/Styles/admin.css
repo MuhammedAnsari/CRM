@@ -1,0 +1,65 @@
+/* admin panel */
+
+.admin-container{
+    display: flex;
+    max-height: 100% !important;
+}
+
+.admin-sidebar{
+    width: 15%;
+    padding: 10px;
+    height: 1000px;
+    background-color: #3c4b64;
+    color: #cdd2db;
+    position: fixed;
+}
+
+.admin-sidebar-options{
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar-options button{
+    text-align: left;
+    border: none;
+    background-color: transparent;
+    margin-top: 8px;
+    padding: 10px;
+    color: #a4acb8;
+}
+
+.admin-sidebar-options button:hover{
+    background-color: #46546c;
+}
+
+.admin-head{
+    font-weight: 300;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
+}
+
+.admin-content{
+    width: 100%;
+    margin-left: 15%;
+    padding: 10px;
+}
+
+.admin-nav{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.admin-nav button{
+    padding: 8px;
+    width: 80px;
+    border: none;
+    background-color: #3399ff;
+    color: #fff;
+    border-radius: 8px;
+}
+
+/* dashboard section */
+.box-section{
+    
+}
