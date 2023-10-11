@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import DownloadIcon from '@mui/icons-material/Download';
 
 function EmployeeTasks({ name }) {
   const [leads, setLeads] = useState([]);
@@ -66,43 +67,70 @@ function EmployeeTasks({ name }) {
       console.error('Error updating lead status:', error);
     }
   };
-  
 
+  // handle download
+  const handleDownload = (leadId, fileName) => {
+    // Create a URL to download the file
+    const downloadUrl = `http://localhost:5000/leads?download=true&leadId=${leadId}`;
+
+    // Create an invisible anchor element to trigger the download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.target = '_blank';
+    link.download = fileName;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+
+    // Trigger the download
+    link.click();
+
+    // Clean up the anchor element
+    document.body.removeChild(link);
+  };
+  
   return (
     <div>
       <h2>Your Tasks</h2>
       <div>
         {filteredLeads.map((lead) => (
           <Card key={lead._id} variant="outlined">
-            <CardContent>
-              <Typography variant="h5" component="div">
-                {lead.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {lead.description}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {lead.deadlineDays} Day(s) remaining
-              </Typography>
-
-              {/* Buttons for requesting more time and starting/completing the task */}
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => handleRequestMoreTime(lead._id)}
-              >
-                Request More Time
-              </Button>
-              <Button
-                variant="outlined"
-                color={lead.status === 'In Progress' ? 'secondary' : 'primary'}
-                onClick={() => handleTaskStatusChange(lead._id)}
-                disabled={lead.status === 'Completed'}
-              >
-                {lead.status === 'In Progress' ? 'Task Completed' : 'Start Task'}
-              </Button>
-            </CardContent>
-          </Card>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {lead.title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {lead.description}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {lead.deadlineDays} Day(s) remaining
+            </Typography>
+        
+            {/* Buttons for requesting more time and starting/completing the task */}
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => handleRequestMoreTime(lead._id)}
+            >
+              Request More Time
+            </Button>
+            <Button
+              variant="outlined"
+              color={lead.status === 'In Progress' ? 'secondary' : 'primary'}
+              onClick={() => handleTaskStatusChange(lead._id)}
+              disabled={lead.status === 'Completed'}
+            >
+              {lead.status === 'In Progress' ? 'Task Completed' : 'Start Task'}
+            </Button>
+        
+            {/* Button with a download symbol */}
+            <Button
+            variant="outlined"
+             onClick={() => handleDownload(lead._id, lead.file.fileName)}
+            >
+              <DownloadIcon />
+            </Button>
+          </CardContent>
+        </Card>
         ))}
       </div>
     </div>

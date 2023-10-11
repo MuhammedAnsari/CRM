@@ -392,7 +392,6 @@ function AdminLeads() {
               <MenuItem value="Assigned">Assigned</MenuItem>
               <MenuItem value="In Progress">In Progress</MenuItem>
               <MenuItem value="Completed">Completed</MenuItem>
-              {/* Add other status options as needed */}
             </Select>
           </FormControl>
         </DialogContent>
@@ -407,10 +406,10 @@ function AdminLeads() {
       </Dialog>
 
       {/* Leads List */}
-      <div>
+      <div className='leads_section_admin'>
         {leads.map((lead) => (
-          <Card key={lead._id} variant="outlined" sx={{ maxWidth: 300, marginBottom: '16px' }}>
-            <CardContent>
+          <Card key={lead._id} style={{ marginLeft: '15px' }} variant="outlined" sx={{ maxWidth: 300, marginBottom: '16px' }}>
+            <CardContent style={{ width: '300px'}}>
               <Typography variant="h5" component="div">
                 {lead.title}
               </Typography>

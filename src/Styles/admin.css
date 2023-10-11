@@ -59,7 +59,8 @@
     border-radius: 8px;
 }
 
-/* dashboard section */
-.box-section{
-    
+/* leads section */
+.leads_section_admin{
+    display: flex;
+    margin-top: 10px;
 }
