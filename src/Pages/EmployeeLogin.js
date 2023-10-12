@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Col, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../Styles/adminLogin.css';
+import Logo from '../Images/logo.png'
 
 function EmployeeLogin() {
   const navigate = useNavigate();
@@ -43,38 +45,41 @@ function EmployeeLogin() {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <Col md={6}>
-        <div className="p-4 border rounded shadow">
-          <h2 className="text-center mb-4">Employee Login</h2>
+    <div className="d-flex justify-content-center align-items-center abc" style={{ minHeight: '100vh'}}>
+      <>
+        <div className="p-5 login-box">
+          <div className='d-flex align-items-center flex-column login-box-txt'>
+            <img src={Logo} alt='logo' style={{ width: '130px' }}/>
+            <h2 className="text-center mb-4 mt-2" style={{ color: '#183a6d', fontSize: '24px' }}>Welcome Back</h2>
+            <p className='text-center' style={{ fontSize: '12px', color: 'gray' }}>Enter your credentials to access your account</p>
+          </div>
           <Form onSubmit={handleLogin}>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
               <Form.Control
                 type="email"
-                placeholder="Enter email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Password"
+                placeholder="Enter your password"
                 value={password}
+                className='mt-3'
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
 
-            <Button className='mt-3' variant="primary" type="submit" block>
-              Login
+            <Button className='mt-3' style={{ width: '100%' }} variant="primary" type="submit" block>
+              Sign In
             </Button>
           </Form>
         </div>
-      </Col>
-    </Container>
+      </>
+    </div>
   );
 }
 

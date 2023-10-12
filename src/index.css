@@ -2,3 +2,39 @@
     padding: 0;
     margin: 0;
 }
+
+.btn_normal {
+    background-color: #fff !important; 
+    color: black !important; 
+    border: none; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.3s, transform 0.3s; 
+    cursor: pointer; 
+    position: relative; 
+    overflow: hidden; 
+}
+
+.btn_normal::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 0;
+    height: 100%;
+    background-color: #2980b9 !important; 
+    transition: width 0.3s; 
+    z-index: -1; 
+}
+
+.btn_normal:hover::before {
+    width: 100%;
+    right: 0; 
+}
+
+.btn_normal:hover {
+    color: #fff !important; 
+    transform: scale(1.05);
+}
+

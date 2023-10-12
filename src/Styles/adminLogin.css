@@ -1,0 +1,16 @@
+.abc{
+    background-color: #f2f6ff;
+}
+
+.login-box{
+    background-color: #fff;
+    width: 350px;
+}
+
+.login-box-txt h2 {
+    margin-bottom: 0px; 
+  }
+  
+  .login-box-txt p {
+    margin-top: -14px; 
+  }

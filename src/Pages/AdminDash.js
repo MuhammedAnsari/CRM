@@ -9,6 +9,8 @@ import ManageAdmin from '../AdminComponents/ManageAdmin';
 import AdminLeads from '../AdminComponents/AdminLeads';
 import AttendanceReport from '../AdminComponents/AttendanceReport';
 import AdminMessage from '../AdminComponents/AdminMessage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ProfilePic from '../Images/profile_pic.jpg'
 
 function AdminDash() {
   const navigate = useNavigate();
@@ -63,9 +65,14 @@ function AdminDash() {
         </div>
         <div className='admin-content'>
           <div className='admin-nav'>
-            <button onClick={handleLogout}>Logout</button>
-            <hr />
+            <div className='profile_details d-flex align-items-center' style={{ marginRight: '10px' }}>
+              <img src={ProfilePic} alt='profile-pic' style={{ width: '35px', marginRight: '10px', borderRadius: '20px' }}/>
+              <span style={{ marginRight: '10px' }}>{name}</span>
+            </div>
+            <button className='btn_normal' style={{ width: '30px', borderRadius: '10px', marginRight: '10px' }}><i class="fa-regular fa-bell"></i></button>
+            <button className='btn_normal' style={{ width: '35px' }} onClick={handleLogout}><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
           </div>
+          <hr />
           {currentSection === 'dashboard' && <DashboardSection name={name} />}
           {currentSection === 'manageUsers' && <ManageUsersSection />}
           {currentSection === 'profile' && <Profile />}

@@ -52,9 +52,7 @@
 
 .admin-nav button{
     padding: 8px;
-    width: 80px;
     border: none;
-    background-color: #3399ff;
     color: #fff;
     border-radius: 8px;
 }
@@ -82,6 +80,26 @@
   }
   
   .message-box:hover {
-    background-color: #f5f5f5; /* Add a background color on hover if desired */
+    background-color: #f5f5f5; 
   }
   
+  /* box section */
+
+  .dash-box{
+    width: 250px;
+    height: 150px;
+    margin-left: 18px;
+    border-radius: 10px;
+    padding: 12px;
+  }
+
+  .box_content{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .box_content span{
+    color: #fff;
+    font-size: 25px;
+    font-weight: 400;
+  }
