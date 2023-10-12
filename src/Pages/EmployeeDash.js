@@ -4,6 +4,7 @@ import '../Styles/admin.css';
 import EmployeeDashSection from '../EmployeeComponents/EmployeeDashSection';
 import EmployeeAttendance from '../EmployeeComponents/EmployeeAttendance';
 import EmployeeTasks from '../EmployeeComponents/EmployeeTasks';
+import EmployeeMail from '../EmployeeComponents/EmployeeMail';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ function Dashboard() {
             <button className={currentSection === 'employeetasks' ? 'active' : ''} onClick={() => setCurrentSection('employeetasks')}>
               <i className="fa-solid fa-clipboard-user"></i> My Tasks
             </button>
+            <button className={currentSection === 'messages' ? 'active' : ''} onClick={() => setCurrentSection('messages')}>
+              <i className="fa-solid fa-clipboard-user"></i> Messages
+            </button>
           </div>
         </div>
         <div className='admin-content'>
@@ -45,7 +49,8 @@ function Dashboard() {
           {/* Conditionally render different sections */}
           {currentSection === 'dashboard' && <EmployeeDashSection name={userName} />} 
           {currentSection === 'attendance' && <EmployeeAttendance name={userName} />}
-          {currentSection === 'employeetasks' && <EmployeeTasks name={userName} />} 
+          {currentSection === 'employeetasks' && <EmployeeTasks name={userName} />}
+          {currentSection === 'messages' && <EmployeeMail name={userName}/>} 
         </div>
       </div>
     </div>
