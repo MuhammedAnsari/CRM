@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal'; 
 import TextField from '@mui/material/TextField'; 
 import axios from 'axios';
+import UserProfile from '../Images/user_profile.jpg'
 
 function ManageUsersSection() {
   const [users, setUsers] = useState([]);
@@ -107,29 +108,31 @@ function ManageUsersSection() {
 
   return (
     <div>
-      <h2>Manage Users</h2>
-      <Button variant="contained" color="primary" onClick={openAddModal}>
-        Add Employee
-      </Button>
-      <TableContainer component={Paper}>
+      <div className='d-flex justify-content-between'>
+        <h2>Employees</h2>
+        <Button className="shadow-button" style={{ color: 'gray' }} onClick={openAddModal}>
+        <i class="fa-solid fa-user-plus"></i>
+        </Button>
+      </div>
+      <TableContainer className='mt-3' component={Paper}>
         <Table aria-label="User Details Table">
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell style={{ color: 'gray' }}>Name</TableCell>
+              <TableCell style={{ color: 'gray' }}>Email</TableCell>
+              <TableCell style={{ color: 'gray' }}>Role</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user._id}>
-                <TableCell>{user.name}</TableCell>
+                <TableCell><img src={UserProfile} alt='profile' style={{ width: '35px', height: '35px', borderRadius: '100%' }}/> {user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="primary" onClick={() => openEditModal(user)}>
-                    Edit
+                  <Button style={{ color: 'gray' }} onClick={() => openEditModal(user)}>
+                    <i class="fa-solid fa-gear"></i>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -137,9 +140,6 @@ function ManageUsersSection() {
           </TableBody>
         </Table>
       </TableContainer>
-
-      
-
 
       {/* Edit User Modal */}
       <Modal open={isEditModalOpen} onClose={closeEditModal}>
@@ -188,14 +188,14 @@ function ManageUsersSection() {
     {/* Add Employee Modal */}
     <Modal open={isAddModalOpen} onClose={closeAddModal}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '300px', backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
-          <h2>Add Employee</h2>
+          <span>Add Employee</span>
           <TextField
             label="Name"
             variant="outlined"
             fullWidth
             value={newEmployee.name}
             onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
-            style={{ marginBottom: '16px' }}
+            style={{ marginTop:'10px', marginBottom: '16px' }}
           />
           <TextField
             label="Email"
@@ -214,13 +214,14 @@ function ManageUsersSection() {
             style={{ marginBottom: '16px' }}
           />
           <div>
-            <label>Role</label>
-            <select
+            <label style={{ color: 'gray' }}>Role</label>
+            <select 
+              className='mt-2'
               value={newEmployee.role}
               onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
-              style={{ width: '100%', padding: '8px', marginBottom: '16px' }}
+              style={{ width: '100%', padding: '8px', marginBottom: '16px', border: 'none' }}
             >
-              <option value="">Select Role</option>
+              <option  value=""><p style={{ color: 'gray' }}>Select Role</p></option>
               {roles.map((role) => (
                 <option key={role._id} value={role.rolename}>
                   {role.rolename}
@@ -228,13 +229,14 @@ function ManageUsersSection() {
               ))}
             </select>
           </div>
-          {/* You can add the UID field if needed */}
-          <Button variant="contained" color="primary" onClick={handleAddEmployee}>
-            Add Employee
-          </Button>
-          <Button variant="contained" color="primary" onClick={closeAddModal}>
-            Cancel
-          </Button>
+          <div className='d-flex justify-content-around'>
+            <Button className='shadow-button' style={{ color: 'green'}} onClick={handleAddEmployee}>
+              <i class="fa-solid fa-check"></i>
+            </Button>
+            <Button className='shadow-button' style={{ color: 'red'}} onClick={closeAddModal}>
+              <i class="fa-solid fa-x"></i>
+            </Button>
+          </div>        
         </div>
       </Modal>
     </div>

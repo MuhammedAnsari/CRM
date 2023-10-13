@@ -1,11 +1,13 @@
+// Roles.js
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import AddRoleModal from '../AdminComponents/AddRoleModal';
+import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Modal, TextField } from '@mui/material';
 
 function Roles() {
   const [roles, setRoles] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [newRole, setNewRole] = useState('');
 
   useEffect(() => {
     // Fetch roles from API
@@ -36,34 +38,68 @@ function Roles() {
     console.log(`Removing role with ID: ${roleId}`);
   };
 
+  const handleAddRole = () => {
+    // Send a POST request to your server to add the new role
+    axios.post('http://localhost:5000/add-role', { rolename: newRole })
+      .then((response) => {
+        // Handle success, for example, close the modal
+        handleCloseModal();
+        // You can also update the roles list on success if needed
+      })
+      .catch((error) => {
+        console.error('Error adding role:', error);
+      });
+  };
+
   return (
     <div>
-      <h2>Manage Roles</h2>
-      <Button variant="contained" color="primary" onClick={handleOpenModal}>
-        Add Role
-      </Button>
-      <TableContainer component={Paper}>
+      <div className='d-flex justify-content-between'>
+        <h2>Roles</h2>
+        <Button className="shadow-button" style={{ color: 'gray' }} onClick={handleOpenModal}>
+          <i className="fa-solid fa-person-circle-plus fa-2x"></i>
+        </Button>
+      </div>
+      <TableContainer className='mt-3' component={Paper}>
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Role Name</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
             {roles.map((role) => (
               <TableRow key={role._id}>
                 <TableCell>{role.rolename}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="primary" onClick={() => handleEditRole(role._id)}>Edit</Button>
-                  <Button variant="contained" color="secondary" onClick={() => handleRemoveRole(role._id)}>Remove</Button>
+                  <Button style={{ color: 'gray' }} onClick={() => handleEditRole(role._id)}>
+                    <i className="fa-solid fa-pen-to-square"></i>
+                  </Button>
+                  <Button style={{ color: 'gray' }} onClick={() => handleRemoveRole(role._id)}>
+                    <i className="fa-solid fa-trash"></i>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <AddRoleModal open={openModal} onClose={handleCloseModal} />
+
+      {/* Modal */}
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <div style={{ padding: '16px', width: '300px', backgroundColor: 'white' }}>
+          <h2>Add New Role</h2>
+          <TextField
+            label="New Role Name"
+            variant="outlined"
+            fullWidth
+            value={newRole}
+            onChange={(e) => setNewRole(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginTop: '16px' }}
+            onClick={handleAddRole}
+          >
+            Add Role
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
