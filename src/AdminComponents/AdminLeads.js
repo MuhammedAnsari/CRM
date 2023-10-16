@@ -26,8 +26,8 @@ function AdminLeads() {
     description: '',
     date: null,
     selectedUser: '',
-    deadlineDays: '', // New field for Deadline (days)
-    status: 'Assigned', // Default status
+    deadlineDays: '', 
+    status: 'Assigned', 
   });
   const [users, setUsers] = useState([]); // State to store user data fetched from the API
   const [leads, setLeads] = useState([]); // State to store leads data fetched from the API
@@ -47,7 +47,7 @@ function AdminLeads() {
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
-  
+
 
   useEffect(() => {
     // Fetch user data from the API when the component mounts
@@ -131,12 +131,12 @@ function AdminLeads() {
     try {
       // Create a new FormData object
       const formDataObj = new FormData();
-  
+
       // Append the selected file to the FormData if a file is selected
       if (selectedFile) {
         formDataObj.append('file', selectedFile);
       }
-  
+
       // Append other form fields to the FormData
       formDataObj.append('title', formData.title);
       formDataObj.append('description', formData.description);
@@ -144,13 +144,13 @@ function AdminLeads() {
       formDataObj.append('selectedUser', formData.selectedUser);
       formDataObj.append('deadlineDays', formData.deadlineDays);
       formDataObj.append('status', formData.status);
-  
+
       // Send a POST request to save the lead in the database along with the file (if selected)
       const response = await fetch('http://localhost:5000/insert-lead', {
         method: 'POST',
         body: formDataObj, // Use the FormData object as the request body
       });
-  
+
       if (response.ok) {
         console.log('Lead saved successfully');
         // Refresh the leads list
@@ -161,11 +161,11 @@ function AdminLeads() {
     } catch (error) {
       console.error('Error saving lead:', error);
     }
-  
+
     setOpen(false);
   };
-  
-  
+
+
 
   const handleEditLead = (leadId) => {
     // Find the lead in the leads array by ID
@@ -247,11 +247,12 @@ function AdminLeads() {
 
   return (
     <div>
-      <h2>Leads</h2>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Add Leads
-      </Button>
-
+      <div className='d-flex justify-content-between'>
+        <h2>Leads</h2>
+        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+          Add Leads
+        </Button>
+      </div>
       {/* Add Lead Dialog */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add Leads</DialogTitle>
@@ -407,30 +408,37 @@ function AdminLeads() {
 
       {/* Leads List */}
       <div className='leads_section_admin'>
-        {leads.map((lead) => (
-          <Card key={lead._id} style={{ marginLeft: '15px' }} variant="outlined" sx={{ maxWidth: 300, marginBottom: '16px' }}>
-            <CardContent style={{ width: '300px'}}>
-              <Typography variant="h5" component="div">
-                {lead.title}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Assigned to: {lead.assignedUser}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Deadline (days): {lead.deadlineDays}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Status: {lead.status}
-              </Typography>
-              <IconButton onClick={() => handleEditLead(lead._id)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton onClick={() => handleDeleteLead(lead._id)}>
-                <DeleteIcon />
-              </IconButton>
-            </CardContent>
-          </Card>
-        ))}
+        {leads
+          .slice() // Create a shallow copy of the array
+          .sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt)) // Sort by 'addedAt' in descending order
+          .map((lead) => (
+            <Card key={lead._id} style={{ marginLeft: '15px' }} variant="outlined" sx={{ maxWidth: 300, marginBottom: '16px' }}>
+              <CardContent style={{ width: '300px' }}>
+                <Typography variant="h5" component="div">
+                  {lead.title}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Assigned to: {lead.assignedUser}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Deadline (days): {lead.deadlineDays}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Status: {lead.status}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Date Added: {new Date(lead.addedAt).toLocaleDateString('en-GB')}
+                </Typography>
+
+                <IconButton onClick={() => handleEditLead(lead._id)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => handleDeleteLead(lead._id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </CardContent>
+            </Card>
+          ))}
       </div>
     </div>
   );

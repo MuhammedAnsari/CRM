@@ -1,119 +1,179 @@
-roles.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
-import AddRoleModal from '../AdminComponents/AddRoleModal';
+import React, { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../Styles/adminLogin.css';
+import Logo from '../Images/logo.png'
 
-function Roles() {
-  const [roles, setRoles] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
+function AdminLogin({ setRole }) { 
+  
+  const navigate = useNavigate(); 
 
-  useEffect(() => {
-    // Fetch roles from API
-    axios.get('http://localhost:5000/roles')
-      .then((response) => {
-        setRoles(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching roles:', error);
+  const [username, setUsername] = useState(''); 
+  const [password, setPassword] = useState(''); 
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      console.log('Attempting login...');
+      const response = await fetch('http://localhost:5000/admin-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
-  }, []);
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
+      console.log('Response:', response); 
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleEditRole = (roleId) => {
-    // Implement your edit role logic here
-    console.log(`Editing role with ID: ${roleId}`);
-  };
-
-  const handleRemoveRole = (roleId) => {
-    // Implement your remove role logic here
-    console.log(`Removing role with ID: ${roleId}`);
+      if (response.ok) {
+        const data = await response.json();
+      
+        // Pass the role as a URL parameter to the dashboard route
+        navigate(`/admindash?role=${data.role}&name=${data.name}`, { replace: true });
+      } else {
+        console.error('Authentication failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
   return (
-    <div>
-      <div className='d-flex justify-content-between'>
-        <h2>Roles</h2>
-        <Button className="shadow-button" style={{ color: 'gray' }} onClick={handleOpenModal}>
-          <i class="fa-solid fa-person-circle-plus fa-2x"></i>
-        </Button>
-      </div>
-      <TableContainer className='mt-3' component={Paper}>
-        <Table>
-          <TableBody>
-            {roles.map((role) => (
-              <TableRow key={role._id}>
-                <TableCell>{role.rolename}</TableCell>
-                <TableCell>
-                  <Button style={{ color: 'gray' }} onClick={() => handleEditRole(role._id)}><i class="fa-solid fa-pen-to-square"></i></Button>
-                  <Button style={{ color: 'gray' }} onClick={() => handleRemoveRole(role._id)}><i class="fa-solid fa-trash"></i></Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-        <AddRoleModal open={openModal} onClose={handleCloseModal} />
+    <div className="d-flex justify-content-center align-items-center abc" style={{ minHeight: '100vh'}}>
+      <>
+        <div className="p-5 login-box">
+          <div className='d-flex align-items-center flex-column login-box-txt'>
+            <img src={Logo} alt='logo' style={{ width: '130px' }}/>
+            <h2 className="text-center mb-4 mt-2" style={{ color: '#183a6d', fontSize: '24px' }}>Welcome Admin</h2>
+            <p className='text-center' style={{ fontSize: '12px', color: 'gray' }}>Enter your credentials to access your account</p>
+          </div>
+          <Form onSubmit={handleLogin}>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Control
+                type="email"
+                placeholder="Enter your email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword">
+              <Form.Control
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                className='mt-3'
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+
+            <Button className='mt-3' style={{ width: '100%' }} variant="primary" type="submit" block>
+              Sign In
+            </Button>
+          </Form>
+        </div>
+      </>
     </div>
   );
 }
 
-export default Roles;
+export default AdminLogin;
 
---------------------------------------------------------------------------------------------
 
-AddRoleModal.js:
+
+-------------------------------------------------------
+
 
 import React, { useState } from 'react';
-import { Modal, TextField, Button } from '@mui/material';
-import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../Styles/admin.css';
+import DashboardSection from '../AdminComponents/DashboardSection';
+import ManageUsersSection from '../AdminComponents/ManageUsersSection';
+import Profile from '../AdminComponents/Profile';
+import Roles from '../AdminComponents/Roles';
+import ManageAdmin from '../AdminComponents/ManageAdmin';
+import AdminLeads from '../AdminComponents/AdminLeads';
+import AttendanceReport from '../AdminComponents/AttendanceReport';
+import AdminMessage from '../AdminComponents/AdminMessage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ProfilePic from '../Images/profile_pic.jpg'
 
-function AddRoleModal({ open, onClose }) {
-  const [newRole, setNewRole] = useState('');
+function AdminDash() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const role = searchParams.get('role');
+  const name = searchParams.get('name');
+  
 
-  const handleAddRole = () => {
-    // Send a POST request to your server to add the new role
-    axios.post('http://localhost:5000/add-role', { rolename: newRole })
-      .then((response) => {
-        // Handle success, for example, close the modal
-        onClose();
-        // You can also update the roles list on success if needed
-      })
-      .catch((error) => {
-        console.error('Error adding role:', error);
-      });
+  // State to track the current section
+  const [currentSection, setCurrentSection] = useState('dashboard');
+
+  // Function to handle logout
+  const handleLogout = () => {
+    navigate('/admin', { replace: true });
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <div style={{ padding: '16px', width: '300px', backgroundColor: 'white' }}>
-        <h2>Add New Role</h2>
-        <TextField
-          label="New Role Name"
-          variant="outlined"
-          fullWidth
-          value={newRole}
-          onChange={(e) => setNewRole(e.target.value)}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: '16px' }}
-          onClick={handleAddRole}
-        >
-          Add Role
-        </Button>
+    <div>
+      <div className='admin-container'>
+        <div className='admin-sidebar'>
+          <p className='admin-head'>{role}</p>
+          <hr />
+          <div className='admin-sidebar-options'>
+            {/* Buttons to switch sections */}
+            <button onClick={() => setCurrentSection('dashboard')}>
+              <i className="fa-solid fa-gauge-high"></i> Dashboard
+            </button>
+            <button onClick={() => setCurrentSection('manageUsers')}>
+              <i className="fa-solid fa-users"></i> Manage Users
+            </button>
+            <button onClick={() => setCurrentSection('profile')}>
+              <i class="fa-regular fa-address-card"></i> Profile
+            </button>
+            <button onClick={() => setCurrentSection('roles')}>
+              <i class="fa-solid fa-user-doctor"></i> Roles
+            </button>
+            <button onClick={() => setCurrentSection('leads')}>
+              <i class="fa-solid fa-user-doctor"></i> Leads
+            </button>
+            <button onClick={() => setCurrentSection('attendance_report')}>
+              <i class="fa-solid fa-user-doctor"></i> Attendance Report
+            </button>
+            {role === 'Superadmin' && (
+              <button onClick={() => setCurrentSection('manage_admin')}>
+                <i className="fa-solid fa-user-doctor"></i> Manage Admins
+              </button>
+            )}
+            <button onClick={() => setCurrentSection('messages')}>
+              <i class="fa-solid fa-user-doctor"></i> Messages
+            </button>
+          </div>
+        </div>
+        <div className='admin-content'>
+          <div className='admin-nav'>
+            <div className='profile_details d-flex align-items-center' style={{ marginRight: '10px' }}>
+              <img src={ProfilePic} alt='profile-pic' style={{ width: '35px', marginRight: '10px', borderRadius: '20px' }}/>
+              <span style={{ marginRight: '10px' }}>{name}</span>
+            </div>
+            <button className='btn_normal' style={{ width: '30px', borderRadius: '10px', marginRight: '10px' }}><i class="fa-regular fa-bell"></i></button>
+            <button className='btn_normal' style={{ width: '35px' }} onClick={handleLogout}><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+          </div>
+          <hr />
+          {currentSection === 'dashboard' && <DashboardSection name={name} />}
+          {currentSection === 'manageUsers' && <ManageUsersSection />}
+          {currentSection === 'profile' && <Profile />}
+          {currentSection === 'roles' && <Roles />}
+          {currentSection === 'manage_admin' && <ManageAdmin />}
+          {currentSection === 'leads' && <AdminLeads />}
+          {currentSection === 'attendance_report' && <AttendanceReport />}
+          {currentSection === 'messages' && <AdminMessage />} 
+        </div>
       </div>
-    </Modal>
+    </div>
   );
 }
 
-export default AddRoleModal;
-
+export default AdminDash;

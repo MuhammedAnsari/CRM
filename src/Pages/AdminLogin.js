@@ -3,12 +3,10 @@ import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Styles/adminLogin.css';
-import Logo from '../Images/logo.png'
+import Logo from '../Images/logo.png';
 
-function AdminLogin({ setRole }) { 
-  
-  const navigate = useNavigate(); 
-
+function AdminLogin() { 
+  const navigate = useNavigate();
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState(''); 
 
@@ -29,9 +27,13 @@ function AdminLogin({ setRole }) {
 
       if (response.ok) {
         const data = await response.json();
-      
-        // Pass the role as a URL parameter to the dashboard route
-        navigate(`/admindash?role=${data.role}&name=${data.name}`, { replace: true });
+
+        // Store the name and role in localStorage
+        localStorage.setItem('adminName', data.name);
+        localStorage.setItem('adminRole', data.role);
+
+        // Redirect to the dashboard
+        navigate('/admindash', { replace: true });
       } else {
         console.error('Authentication failed');
       }

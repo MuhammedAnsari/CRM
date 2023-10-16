@@ -61,6 +61,7 @@
 .leads_section_admin{
     display: flex;
     margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 /* message box */
@@ -102,4 +103,11 @@
     color: #fff;
     font-size: 25px;
     font-weight: 400;
+  }
+
+  /* roles section */
+  .add_role_modal{
+    position: absolute !important;
+    top: 35% !important;
+    left: 40% !important;
   }

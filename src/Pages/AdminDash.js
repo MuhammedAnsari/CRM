@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../Styles/admin.css';
 import DashboardSection from '../AdminComponents/DashboardSection';
 import ManageUsersSection from '../AdminComponents/ManageUsersSection';
@@ -10,20 +10,20 @@ import AdminLeads from '../AdminComponents/AdminLeads';
 import AttendanceReport from '../AdminComponents/AttendanceReport';
 import AdminMessage from '../AdminComponents/AdminMessage';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ProfilePic from '../Images/profile_pic.jpg'
+import ProfilePic from '../Images/profile_pic.jpg';
 
 function AdminDash() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const role = searchParams.get('role');
-  const name = searchParams.get('name');
+  const name = localStorage.getItem('adminName');
+  const role = localStorage.getItem('adminRole');
 
   // State to track the current section
   const [currentSection, setCurrentSection] = useState('dashboard');
 
   // Function to handle logout
   const handleLogout = () => {
+    localStorage.removeItem('adminName');
+    localStorage.removeItem('adminRole');
     navigate('/admin', { replace: true });
   };
 
@@ -42,16 +42,16 @@ function AdminDash() {
               <i className="fa-solid fa-users"></i> Manage Users
             </button>
             <button onClick={() => setCurrentSection('profile')}>
-              <i class="fa-regular fa-address-card"></i> Profile
+              <i className="fa-regular fa-address-card"></i> Profile
             </button>
             <button onClick={() => setCurrentSection('roles')}>
-              <i class="fa-solid fa-user-doctor"></i> Roles
+              <i className="fa-solid fa-user-doctor"></i> Roles
             </button>
             <button onClick={() => setCurrentSection('leads')}>
-              <i class="fa-solid fa-user-doctor"></i> Leads
+              <i className="fa-solid fa-user-doctor"></i> Leads
             </button>
             <button onClick={() => setCurrentSection('attendance_report')}>
-              <i class="fa-solid fa-user-doctor"></i> Attendance Report
+              <i className="fa-solid fa-user-doctor"></i> Attendance Report
             </button>
             {role === 'Superadmin' && (
               <button onClick={() => setCurrentSection('manage_admin')}>
@@ -59,7 +59,7 @@ function AdminDash() {
               </button>
             )}
             <button onClick={() => setCurrentSection('messages')}>
-              <i class="fa-solid fa-user-doctor"></i> Messages
+              <i className="fa-solid fa-user-doctor"></i> Messages
             </button>
           </div>
         </div>
@@ -69,8 +69,8 @@ function AdminDash() {
               <img src={ProfilePic} alt='profile-pic' style={{ width: '35px', marginRight: '10px', borderRadius: '20px' }}/>
               <span style={{ marginRight: '10px' }}>{name}</span>
             </div>
-            <button className='btn_normal' style={{ width: '30px', borderRadius: '10px', marginRight: '10px' }}><i class="fa-regular fa-bell"></i></button>
-            <button className='btn_normal' style={{ width: '35px' }} onClick={handleLogout}><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+            <button className='btn_normal' style={{ width: '30px', borderRadius: '10px', marginRight: '10px' }}><i className="fa-regular fa-bell"></i></button>
+            <button className='btn_normal' style={{ width: '35px' }} onClick={handleLogout}><i className="fa-solid fa-arrow-right-from-bracket"></i></button>
           </div>
           <hr />
           {currentSection === 'dashboard' && <DashboardSection name={name} />}

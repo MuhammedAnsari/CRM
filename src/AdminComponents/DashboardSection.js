@@ -1,38 +1,78 @@
 import React, { Component } from 'react';
 import '../Styles/admin.css';
 import CanvasJSReact from '@canvasjs/react-charts';
-
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-var dataPoints = [];
-
 class DashboardSection extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      monthlyData: [],
+      statusData: [], // State to store status data
+    };
+  }
+
   componentDidMount() {
-    fetch('https://canvasjs.com/data/gallery/react/nifty-stock-price.json')
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        for (var i = 0; i < data.length; i++) {
-          dataPoints.push({
-            x: new Date(data[i].x),
-            y: data[i].y,
-          });
-        }
+    // Fetch lead data API
+    fetch('http://localhost:5000/leads')
+      .then((response) => response.json())
+      .then((data) => {
+        const monthlyData = data.reduce((acc, lead) => {
+          const addedAt = new Date(lead.addedAt);
+          const monthYear = `${addedAt.toLocaleString('en-us', { month: 'long' })} ${addedAt.getFullYear()}`;
+          acc[monthYear] = (acc[monthYear] || 0) + 1;
+          return acc;
+        }, {});
+
+        // Sort data points by month
+        const sortedData = Object.entries(monthlyData).sort(
+          (a, b) => new Date(a[0]) - new Date(b[0])
+        );
+
+        this.setState({ monthlyData: sortedData });
+
+        // Process status data from the leads
+        const statusCounts = data.reduce((statusCounts, lead) => {
+          const status = lead.status;
+          statusCounts[status] = (statusCounts[status] || 0) + 1;
+          return statusCounts;
+        }, {});
+
+        const statusData = Object.entries(statusCounts).map(([status, count]) => ({
+          y: count,
+          label: status,
+        }));
+
+        this.setState({ statusData });
       });
   }
 
   render() {
+    const { monthlyData, statusData } = this.state;
+
+    const dataPoints = monthlyData.map(([x, y]) => ({
+      label: x,
+      y,
+    }));
+
     const leadsChartOptions = {
       theme: 'light2',
       title: {
         text: 'Leads',
       },
+      axisX: {
+        title: 'Month',
+        interval: 1,
+        labelAngle: 45,
+      },
+      axisY: {
+        title: 'Number of Leads',
+        minimum: 0,
+      },
       data: [
         {
           type: 'line',
-          xValueFormatString: 'MMM YYYY',
-          yValueFormatString: '#,##0.00',
+          yValueFormatString: '0',
           dataPoints: dataPoints,
         },
       ],
@@ -40,7 +80,7 @@ class DashboardSection extends Component {
 
     const employeeChartOptions = {
       animationEnabled: true,
-      exportEnabled: true,
+      exportEnabled: false,
       theme: 'light1',
       title: {
         text: 'Working Stats',
@@ -48,16 +88,9 @@ class DashboardSection extends Component {
       data: [
         {
           type: 'pie',
-          indexLabel: '{label}: {y}%',
+          indexLabel: '{label}: {y}',
           startAngle: -90,
-          dataPoints: [
-            { y: 20, label: 'Airfare' },
-            { y: 24, label: 'Food & Drinks' },
-            { y: 20, label: 'Accommodation' },
-            { y: 14, label: 'Transportation' },
-            { y: 12, label: 'Activities' },
-            { y: 10, label: 'Misc' },
-          ],
+          dataPoints: statusData, 
         },
       ],
     };

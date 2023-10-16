@@ -1,8 +1,8 @@
 // Roles.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Modal, TextField } from '@mui/material';
+import '../Styles/admin.css'
 
 function Roles() {
   const [roles, setRoles] = useState([]);
@@ -51,6 +51,8 @@ function Roles() {
       });
   };
 
+
+
   return (
     <div>
       <div className='d-flex justify-content-between'>
@@ -79,27 +81,29 @@ function Roles() {
         </Table>
       </TableContainer>
 
-      {/* Modal */}
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <div style={{ padding: '16px', width: '300px', backgroundColor: 'white' }}>
-          <h2>Add New Role</h2>
-          <TextField
-            label="New Role Name"
-            variant="outlined"
-            fullWidth
-            value={newRole}
-            onChange={(e) => setNewRole(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ marginTop: '16px' }}
-            onClick={handleAddRole}
-          >
-            Add Role
-          </Button>
-        </div>
-      </Modal>
+      {/* Add role Modal */}
+      <div className='modal_parent'>
+        <Modal className='add_role_modal' open={openModal} onClose={handleCloseModal}>
+          <div style={{ padding: '16px', width: '300px', backgroundColor: 'white' }}>
+            <p>Add New Role</p>
+            <TextField
+              label="New Role Name"
+              variant="outlined"
+              fullWidth
+              value={newRole}
+              onChange={(e) => setNewRole(e.target.value)}
+            />
+            <div className='d-flex justify-content-around mt-2'>
+              <Button onClick={handleAddRole} style={{ color: 'green'}}>
+                <i class="fa-solid fa-check"></i>
+              </Button>
+              <Button onClick={handleCloseModal} style={{ color: 'red'}}>
+                <i class="fa-solid fa-x"></i>
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      </div>
     </div>
   );
 }
