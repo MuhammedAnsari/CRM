@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import '../Styles/admin.css'
 
 function AttendanceReport() {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -48,21 +49,23 @@ function AttendanceReport() {
 
   return (
     <div>
-      <h1>Attendance Report</h1>
-      <FormControl variant="outlined" style={{ marginBottom: '20px' }}>
-        <Select
-          value={selectedUser}
-          onChange={handleUserChange}
-          label="Select User"
-        >
-          <MenuItem value="">All Users</MenuItem>
-          {employeeNames.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <div className='d-flex justify-content-between'>
+        <h1>Attendance Report</h1>
+        <FormControl variant="outlined" style={{ marginBottom: '20px' }}>
+          <Select
+            value={selectedUser}
+            onChange={handleUserChange}
+            label="Select User"
+          >
+            <MenuItem value="">All Users</MenuItem>
+            {employeeNames.map((name) => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
 
       <TableContainer component={Paper}>
         <Table aria-label="Attendance Table">

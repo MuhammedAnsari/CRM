@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Styles/adminLogin.css';
 import Logo from '../Images/logo.png';
+import { useAuth } from '../AuthContext';
 
-function AdminLogin() { 
+function AdminLogin() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(''); 
-  const [password, setPassword] = useState(''); 
+  const { login } = useAuth(); // Get the login function from the AuthContext
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,10 +25,13 @@ function AdminLogin() {
         body: JSON.stringify({ username, password }),
       });
 
-      console.log('Response:', response); 
+      console.log('Response:', response);
 
       if (response.ok) {
         const data = await response.json();
+        
+        // Call the login function from the AuthContext to set isAuthenticated to true
+        login();
 
         // Store the name and role in localStorage
         localStorage.setItem('adminName', data.name);
@@ -44,7 +49,7 @@ function AdminLogin() {
 
   return (
     <div className="d-flex justify-content-center align-items-center abc" style={{ minHeight: '100vh'}}>
-      <>
+      
         <div className="p-5 login-box">
           <div className='d-flex align-items-center flex-column login-box-txt'>
             <img src={Logo} alt='logo' style={{ width: '130px' }}/>
@@ -76,7 +81,7 @@ function AdminLogin() {
             </Button>
           </Form>
         </div>
-      </>
+     
     </div>
   );
 }

@@ -28,15 +28,19 @@ function Roles() {
     setOpenModal(false);
   };
 
-  const handleEditRole = (roleId) => {
-    // Implement your edit role logic here
-    console.log(`Editing role with ID: ${roleId}`);
-  };
-
   const handleRemoveRole = (roleId) => {
-    // Implement your remove role logic here
-    console.log(`Removing role with ID: ${roleId}`);
+    // Send a DELETE request to remove the role
+    axios.delete(`http://localhost:5000/remove-role/${roleId}`)
+      .then((response) => {
+        // Handle success, for example, update the roles list
+        const updatedRoles = roles.filter((role) => role._id !== roleId);
+        setRoles(updatedRoles);
+      })
+      .catch((error) => {
+        console.error('Error removing role:', error);
+      });
   };
+  
 
   const handleAddRole = () => {
     // Send a POST request to your server to add the new role
@@ -68,10 +72,7 @@ function Roles() {
               <TableRow key={role._id}>
                 <TableCell>{role.rolename}</TableCell>
                 <TableCell>
-                  <Button style={{ color: 'gray' }} onClick={() => handleEditRole(role._id)}>
-                    <i className="fa-solid fa-pen-to-square"></i>
-                  </Button>
-                  <Button style={{ color: 'gray' }} onClick={() => handleRemoveRole(role._id)}>
+                  <Button style={{ color: 'red' }} onClick={() => handleRemoveRole(role._id)}>
                     <i className="fa-solid fa-trash"></i>
                   </Button>
                 </TableCell>
