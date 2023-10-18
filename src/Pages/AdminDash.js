@@ -75,7 +75,7 @@ function AdminDash() {
           <hr />
           {currentSection === 'dashboard' && <DashboardSection name={name} />}
           {currentSection === 'manageUsers' && <ManageUsersSection />}
-          {currentSection === 'profile' && <Profile />}
+          {currentSection === 'profile' && <Profile name={name} />}
           {currentSection === 'roles' && <Roles />}
           {currentSection === 'manage_admin' && <ManageAdmin />}
           {currentSection === 'leads' && <AdminLeads />}

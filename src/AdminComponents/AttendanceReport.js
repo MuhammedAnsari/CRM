@@ -71,9 +71,9 @@ function AttendanceReport() {
         <Table aria-label="Attendance Table">
           <TableHead>
             <TableRow>
-              <TableCell>Username</TableCell>
-              <TableCell>Clock In Time</TableCell>
-              <TableCell>Clock Out Time</TableCell>
+              <TableCell style={{ color: 'gray' }}>Username</TableCell>
+              <TableCell style={{ color: 'gray' }}>Clock In Time</TableCell>
+              <TableCell style={{ color: 'gray' }}>Clock Out Time</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -112,4 +112,7 @@
     left: 40% !important;
   }
 
-  
+  /* profile section */
+  .manage-profile-section{
+    display: flex;
+  }
