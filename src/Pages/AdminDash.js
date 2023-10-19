@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../Styles/admin.css';
 import DashboardSection from '../AdminComponents/DashboardSection';
 import ManageUsersSection from '../AdminComponents/ManageUsersSection';
-import Profile from '../AdminComponents/Profile';
+// import Profile from '../AdminComponents/Profile';
 import Roles from '../AdminComponents/Roles';
 import ManageAdmin from '../AdminComponents/ManageAdmin';
 import AdminLeads from '../AdminComponents/AdminLeads';
@@ -41,9 +41,9 @@ function AdminDash() {
             <button onClick={() => setCurrentSection('manageUsers')}>
               <i className="fa-solid fa-users"></i> Manage Users
             </button>
-            <button onClick={() => setCurrentSection('profile')}>
+            {/* <button onClick={() => setCurrentSection('profile')}>
               <i className="fa-regular fa-address-card"></i> Profile
-            </button>
+            </button> */}
             <button onClick={() => setCurrentSection('roles')}>
               <i className="fa-solid fa-user-doctor"></i> Roles
             </button>
@@ -59,7 +59,7 @@ function AdminDash() {
               </button>
             )}
             <button onClick={() => setCurrentSection('messages')}>
-              <i className="fa-solid fa-user-doctor"></i> Messages
+              <i className="fa-solid fa-user-doctor"></i> Send Notification
             </button>
           </div>
         </div>
@@ -75,7 +75,7 @@ function AdminDash() {
           <hr />
           {currentSection === 'dashboard' && <DashboardSection name={name} />}
           {currentSection === 'manageUsers' && <ManageUsersSection />}
-          {currentSection === 'profile' && <Profile name={name} />}
+          {/* {currentSection === 'profile' && <Profile name={name} />} */}
           {currentSection === 'roles' && <Roles />}
           {currentSection === 'manage_admin' && <ManageAdmin />}
           {currentSection === 'leads' && <AdminLeads />}

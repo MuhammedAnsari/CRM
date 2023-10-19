@@ -9,6 +9,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import AdminMailSection from './AdminMailSection';
+import '../Styles/admin.css'
 
 function AdminMessage() {
   const [users, setUsers] = useState([]);
@@ -66,10 +67,12 @@ function AdminMessage() {
 
   return (
     <div>
-      <h1>Mail Box</h1>
-      <Button variant="outlined" color="primary" onClick={handleOpen}>
-        Compose
-      </Button>
+      <div className='d-flex justify-content-between'>
+        <h1>Send Notification</h1>
+        <Button variant="outlined" color="primary" onClick={handleOpen}>
+          Compose
+        </Button>
+      </div>
       <Modal open={open} onClose={handleClose}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
           <h2>Compose Mail</h2>
@@ -109,7 +112,7 @@ function AdminMessage() {
         </Box>
       </Modal>
 
-      <div className='mail_section'>
+      <div className='mail_section mt-3'>
         <AdminMailSection />
       </div>
     </div>
