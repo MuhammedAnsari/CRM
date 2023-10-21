@@ -24,10 +24,43 @@ function EmployeeTasks({ name }) {
   const filteredLeads = leads.filter((lead) => lead.assignedUser === name);
 
   // Function to handle requesting more time
-  const handleRequestMoreTime = (leadId) => {
-    // Implement the logic for requesting more time here
-    console.log(`Requested more time for lead with ID ${leadId}`);
+  const handleRequestMoreTime = async (leadId) => {
+    try {
+      // Fetch the lead data from the server
+      const response = await fetch(`http://localhost:5000/leads/${leadId}`);
+  
+      if (response.ok) {
+        // If the GET request is successful, extract the data from the response
+        const leadData = await response.json();
+        const { title, assignedUser, deadlineDays } = leadData;
+        
+        // Log the extracted data for debugging purposes
+        console.log('Extracted data:', { title, assignedUser, deadlineDays });
+  
+        // Now, you can proceed to make a POST request to store this data.
+        const apiResponse = await fetch('http://localhost:5000/requests', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title, assignedUser, deadlineDays }),
+        });
+  
+        if (apiResponse.ok) {
+          console.log('Request for more time created successfully.');
+        } else {
+          console.error('Error creating a request:', apiResponse.statusText);
+        }
+      } else {
+        // Log an error message if the GET request for lead data fails
+        console.error('Error fetching lead data:', response.statusText);
+      }
+    } catch (error) {
+      // Log an error message if an unexpected error occurs
+      console.error('Error handling more time request:', error);
+    }
   };
+  
 
   // Function to handle starting or completing a task
   const handleTaskStatusChange = async (leadId) => {

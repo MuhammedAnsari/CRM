@@ -1,11 +1,17 @@
-admindash:
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import axios from 'axios'; // Import Axios for making API requests
 import '../Styles/admin.css';
 import DashboardSection from '../AdminComponents/DashboardSection';
 import ManageUsersSection from '../AdminComponents/ManageUsersSection';
-import Profile from '../AdminComponents/Profile';
 import Roles from '../AdminComponents/Roles';
 import ManageAdmin from '../AdminComponents/ManageAdmin';
 import AdminLeads from '../AdminComponents/AdminLeads';
@@ -14,13 +20,16 @@ import AdminMessage from '../AdminComponents/AdminMessage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfilePic from '../Images/profile_pic.jpg';
 
+
 function AdminDash() {
   const navigate = useNavigate();
   const name = localStorage.getItem('adminName');
   const role = localStorage.getItem('adminRole');
 
-  // State to track the current section
+  // State to track the current section, notification anchor, and notifications
   const [currentSection, setCurrentSection] = useState('dashboard');
+  const [notificationAnchor, setNotificationAnchor] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   // Function to handle logout
   const handleLogout = () => {
@@ -29,22 +38,44 @@ function AdminDash() {
     navigate('/admin', { replace: true });
   };
 
+  // Function to open the notification dropdown
+  const openNotifications = (event) => {
+    setNotificationAnchor(event.currentTarget);
+  };
+
+  // Function to close the notification dropdown
+  const closeNotifications = () => {
+    setNotificationAnchor(null);
+  };
+
+  // Function to fetch notifications from the API
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/view-request');
+      setNotifications(response.data);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  // Fetch notifications when the component mounts
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
   return (
     <div>
-      <div className='admin-container'>
-        <div className='admin-sidebar'>
-          <p className='admin-head'>{role}</p>
+      <div className="admin-container">
+        <div className="admin-sidebar">
+          <p className="admin-head">{role}</p>
           <hr />
-          <div className='admin-sidebar-options'>
+          <div className="admin-sidebar-options">
             {/* Buttons to switch sections */}
             <button onClick={() => setCurrentSection('dashboard')}>
               <i className="fa-solid fa-gauge-high"></i> Dashboard
             </button>
             <button onClick={() => setCurrentSection('manageUsers')}>
               <i className="fa-solid fa-users"></i> Manage Users
-            </button>
-            <button onClick={() => setCurrentSection('profile')}>
-              <i className="fa-regular fa-address-card"></i> Profile
             </button>
             <button onClick={() => setCurrentSection('roles')}>
               <i className="fa-solid fa-user-doctor"></i> Roles
@@ -61,23 +92,47 @@ function AdminDash() {
               </button>
             )}
             <button onClick={() => setCurrentSection('messages')}>
-              <i className="fa-solid fa-user-doctor"></i> Messages
+              <i className="fa-solid fa-user-doctor"></i> Send Notification
             </button>
           </div>
         </div>
-        <div className='admin-content'>
-          <div className='admin-nav'>
-            <div className='profile_details d-flex align-items-center' style={{ marginRight: '10px' }}>
-              <img src={ProfilePic} alt='profile-pic' style={{ width: '35px', marginRight: '10px', borderRadius: '20px' }}/>
+        <div className="admin-content">
+          <div className="admin-nav">
+            <div className="profile_details d-flex align-items-center" style={{ marginRight: '10px' }}>
+              <img src={ProfilePic} alt="profile-pic" style={{ width: '35px', marginRight: '10px', borderRadius: '20px' }}/>
               <span style={{ marginRight: '10px' }}>{name}</span>
             </div>
-            <button className='btn_normal' style={{ width: '30px', borderRadius: '10px', marginRight: '10px' }}><i className="fa-regular fa-bell"></i></button>
-            <button className='btn_normal' style={{ width: '35px' }} onClick={handleLogout}><i className="fa-solid fa-arrow-right-from-bracket"></i></button>
+            <Button className="btn_normal" style={{ width: '30px', borderRadius: '10px', marginRight: '10px' }} onClick={openNotifications}>
+              <NotificationsIcon />
+            </Button>
+            <Button className="btn_normal" style={{ width: '35px' }} onClick={handleLogout}>
+              <i className="fa-solid fa-arrow-right-from-bracket"></i>
+            </Button>
           </div>
+          <Popover
+            open={Boolean(notificationAnchor)}
+            anchorEl={notificationAnchor}
+            onClose={closeNotifications}
+          >
+            <Typography variant="h6" sx={{ p: 2 }}>
+              Notifications
+            </Typography>
+            <List>
+              {notifications.map((notification, index) => (
+                <ListItem key={notification._id}>
+                  <ListItemIcon>
+                    <NotificationsIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`${notification.assignedUser} requested for more days for "${notification.title}" lead. Actual deadline is ${notification.deadlineDays} days.`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Popover>
           <hr />
           {currentSection === 'dashboard' && <DashboardSection name={name} />}
           {currentSection === 'manageUsers' && <ManageUsersSection />}
-          {currentSection === 'profile' && <Profile name={name} />}
           {currentSection === 'roles' && <Roles />}
           {currentSection === 'manage_admin' && <ManageAdmin />}
           {currentSection === 'leads' && <AdminLeads />}
@@ -90,35 +145,3 @@ function AdminDash() {
 }
 
 export default AdminDash;
-
-
----------------------------------------------------------
-
-profile.js:
-
-import React from 'react';
-import '../Styles/admin.css'
-
-function Profile() {
-    return (
-      <div>
-        <h2>Manage Profile</h2>
-        <div className='manage-profile-section'>
-          <div className='profile-image'></div>
-          <div className='profile-credentials'></div>
-        </div>
-      </div>
-    );
-  }
-  
-  export default Profile;
-
-
-  {currentSection === 'dashboard' && <DashboardSection name={name} />}
-          {currentSection === 'manageUsers' && <ManageUsersSection />}
-          {currentSection === 'profile' && <Profile name={name} />}
-          {currentSection === 'roles' && <Roles />}
-          {currentSection === 'manage_admin' && <ManageAdmin />}
-          {currentSection === 'leads' && <AdminLeads />}
-          {currentSection === 'attendance_report' && <AttendanceReport />}
-          {currentSection === 'messages' && <AdminMessage />} 

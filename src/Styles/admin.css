@@ -9,9 +9,9 @@
     width: 15%;
     padding: 10px;
     height: 1000px;
-    background-color: #3c4b64;
-    color: #cdd2db;
+    color: gray;
     position: fixed;
+    font-weight: 300;
 }
 
 .admin-sidebar-options{
@@ -23,14 +23,18 @@
     text-align: left;
     border: none;
     background-color: transparent;
-    margin-top: 8px;
+    margin-top: 20px;
     padding: 10px;
-    color: #a4acb8;
+    font-weight: 300;
+    color: gray;
 }
 
-.admin-sidebar-options button:hover{
-    background-color: #46546c;
+.selected, .admin-sidebar-options button:hover{
+    background-color: #2e53ff !important;
+    color: #fff !important;
+    border-radius: 10px;
 }
+
 
 .admin-head{
     font-weight: 300;

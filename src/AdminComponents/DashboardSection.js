@@ -87,7 +87,7 @@ class DashboardSection extends Component {
       },
       data: [
         {
-          type: 'pie',
+          type: 'doughnut',
           indexLabel: '{label}: {y}',
           startAngle: -90,
           dataPoints: statusData, 
@@ -100,29 +100,38 @@ class DashboardSection extends Component {
         <div className='box-section d-flex'>
           <div
             className='dash-box'
-            style={{ backgroundColor: '#3399ff', border: 'solid #2a7ed6 1px' }}
+            style={{ border: 'solid #2a7ed6 1px' }}
           >
             <div className='box_content'>
-              <span style={{ fontWeight: '300' }}>Admins</span>
-              <span>4</span>
+              <div className='d-flex align-items-center justify-content-between' style={{ width: '175px' }}>
+                <i style={{ backgroundColor: '#e4e9ff', color: '#3c5fff', padding: '8px', fontSize: '18px' }} class="fa-regular fa-user"></i>
+                <span style={{ fontWeight: '300', color: 'gray' }}>Employees</span>
+              </div>
+              <span style={{ color: 'black' }}>6/10</span>
             </div>
           </div>
           <div
             className='dash-box'
-            style={{ backgroundColor: '#f9b115', border: 'solid #cd9215 1px' }}
+            style={{ border: 'solid #cd9215 1px' }}
           >
             <div className='box_content'>
-              <span style={{ fontWeight: '300' }}>Employees</span>
-              <span>10</span>
+            <div className='d-flex align-items-center justify-content-between' style={{ width: '110px' }}>
+                <i style={{ backgroundColor: '#fff8dd', color: '#e2bf39', padding: '8px', fontSize: '18px' }} class="fa-regular fa-hourglass"></i>
+                <span style={{ fontWeight: '300', color: 'gray' }}>Leads</span>
+              </div>
+              <span style={{ color: 'black' }}>10</span>
             </div>
           </div>
           <div
             className='dash-box'
-            style={{ backgroundColor: '#e55353', border: 'solid #bd4448 1px' }}
+            style={{ border: 'solid #bd4448 1px' }}
           >
             <div className='box_content'>
-              <span style={{ fontWeight: '300' }}>Leads</span>
-              <span>2</span>
+            <div className='d-flex align-items-center justify-content-between' style={{ width: '194px' }}>
+                <i style={{ backgroundColor: '#ffe4f9', color: '#ff22cf', padding: '8px', fontSize: '18px' }} class="fa-regular fa-regular fa-bell"></i>
+                <span style={{ fontWeight: '300', color: 'gray' }}>Notifications</span>
+              </div>
+              <span style={{ color: 'black' }}>2</span>
             </div>
           </div>
         </div>
