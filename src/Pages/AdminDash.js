@@ -17,11 +17,11 @@ import ManageAdmin from '../AdminComponents/ManageAdmin';
 import AdminLeads from '../AdminComponents/AdminLeads';
 import AttendanceReport from '../AdminComponents/AttendanceReport';
 import AdminMessage from '../AdminComponents/AdminMessage';
+import ManageClients from '../AdminComponents/ManageClients';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfilePic from '../Images/profile_pic.jpg';
 import io from 'socket.io-client';
-import Logo from '../Images/logo.png'
-
+import Logo from '../Images/logo.png';
 
 function AdminDash() {
   const navigate = useNavigate();
@@ -88,9 +88,7 @@ const openNotifications = (event) => {
       <div className="admin-container">
         <div className="admin-sidebar">
           <img src={Logo} alt='logo' style={{ width: '200px' }}/>
-          
           <div className="admin-sidebar-options">
-            {/* Buttons to switch sections */}
             <button
               className={`admin-sidebar-button ${currentSection === 'dashboard' ? 'selected' : ''}`}
               onClick={() => setCurrentSectionAndHighlightButton('dashboard')}
@@ -114,6 +112,12 @@ const openNotifications = (event) => {
               onClick={() => setCurrentSectionAndHighlightButton('leads')}
             >
               <div><i className="fa-solid fa-check"></i> Leads</div>
+            </button>
+            <button
+              className={`admin-sidebar-button ${currentSection === 'clients' ? 'selected' : ''}`}
+              onClick={() => setCurrentSectionAndHighlightButton('clients')}
+            >
+              <div><i class="fa-solid fa-person-military-pointing"></i> Clients</div>
             </button>
             <button
               className={`admin-sidebar-button ${currentSection === 'attendance_report' ? 'selected' : ''}`}
@@ -175,6 +179,7 @@ const openNotifications = (event) => {
           {currentSection === 'dashboard' && <DashboardSection name={name} />}
           {currentSection === 'manageUsers' && <ManageUsersSection />}
           {currentSection === 'roles' && <Roles />}
+          {currentSection === 'clients' && <ManageClients />}
           {currentSection === 'manage_admin' && <ManageAdmin />}
           {currentSection === 'leads' && <AdminLeads />}
           {currentSection === 'attendance_report' && <AttendanceReport />}

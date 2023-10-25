@@ -5,10 +5,12 @@ import EmployeeDashSection from '../EmployeeComponents/EmployeeDashSection';
 import EmployeeAttendance from '../EmployeeComponents/EmployeeAttendance';
 import EmployeeTasks from '../EmployeeComponents/EmployeeTasks';
 import EmployeeMail from '../EmployeeComponents/EmployeeMail';
+import Logo from '../Images/logo.png';
+import Button from '@mui/material/Button';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const userRole = localStorage.getItem('userRole');
+  
   const userName = localStorage.getItem('userName'); // Corrected variable name
 
   // State to track the current section
@@ -23,10 +25,8 @@ function Dashboard() {
     <div>
       <div className='admin-container'>
         <div className='admin-sidebar'>
-          <p className='admin-head'>{userRole}</p> {/* Corrected variable name */}
-          <hr />
+          <img src={Logo} alt='logo' style={{ width: '200px' }}/>
           <div className='admin-sidebar-options'>
-            {/* Buttons to switch sections */}
             <button className={currentSection === 'dashboard' ? 'active' : ''} onClick={() => setCurrentSection('dashboard')}>
               <i className="fa-solid fa-gauge-high"></i> Dashboard
             </button>
@@ -43,9 +43,11 @@ function Dashboard() {
         </div>
         <div className='admin-content'>
           <div className='admin-nav'>
-            <button onClick={handleLogout}>Logout</button>
-            <hr />
+          <Button className="btn_normal" style={{ width: '35px' }} onClick={handleLogout}>
+              <i className="fa-solid fa-arrow-right-from-bracket"></i>
+            </Button>
           </div>
+          <hr />
           {/* Conditionally render different sections */}
           {currentSection === 'dashboard' && <EmployeeDashSection name={userName} />} 
           {currentSection === 'attendance' && <EmployeeAttendance name={userName} />}

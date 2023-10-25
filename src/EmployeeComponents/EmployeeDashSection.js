@@ -6,66 +6,59 @@ import socketIOClient from 'socket.io-client';
 const socket = socketIOClient('http://localhost:5000');
 
 function EmployeeDashSection({ name, uid }) {
-  const [clockedIn, setClockedIn] = useState(() => {
-    const storedStatus = localStorage.getItem('clockedIn');
-    return storedStatus === 'true';
-  });
-  const [clockInTime, setClockInTime] = useState(() => {
-    const storedTime = localStorage.getItem('clockInTime');
-    return storedTime ? new Date(storedTime) : null;
-  });
-  const [clockOutTime, setClockOutTime] = useState(() => {
-    const storedTime = localStorage.getItem('clockOutTime');
-    return storedTime ? new Date(storedTime) : null;
-  });
+  const [clockedIn, setClockedIn] = useState(false);
+
+  const [clockInTime, setClockInTime] = useState(null);
+  const [clockOutTime, setClockOutTime] = useState(null);
 
   useEffect(() => {
-    socket.on(`updateClockIn_${uid}`, (data) => {
+    // Fetch employee status from the server when the component mounts
+    axios.get(`http://localhost:5000/employees/${name}`)
+      .then((response) => {
+        const { data } = response;
+        setClockedIn(data.status);
+      })
+      .catch((error) => {
+        console.error('Error fetching employee status:', error);
+      });
+
+    socket.on(`updateClockIn_${name}`, (data) => {
       if (data.username === name) {
         setClockInTime(new Date(data.clockInTime));
         setClockedIn(true);
-        localStorage.setItem('clockedIn', 'true');
-        localStorage.setItem('clockInTime', data.clockInTime);
       }
     });
 
-    socket.on(`updateClockOut_${uid}`, (data) => {
+    socket.on(`updateClockOut_${name}`, (data) => {
       if (data.username === name) {
         setClockOutTime(new Date(data.clockOutTime));
         setClockedIn(false);
-        localStorage.setItem('clockedIn', 'false');
-        localStorage.setItem('clockOutTime', data.clockOutTime);
       }
     });
 
     return () => {
-      socket.off(`updateClockIn_${uid}`);
-      socket.off(`updateClockOut_${uid}`);
+      socket.off(`updateClockIn_${name}`);
+      socket.off(`updateClockOut_${name}`);
     };
-  }, [name, uid]);
+  }, [name]);
 
   const handleClockInOut = () => {
     if (clockedIn) {
-      axios.post('http://localhost:5000/clock-out', { username: name, uid: uid }) // Pass UID to the server
+      axios.post('http://localhost:5000/clock-out', { username: name, uid })
         .then((response) => {
           const { data } = response;
           setClockOutTime(new Date(data.clockOutTime));
           setClockedIn(false);
-          localStorage.setItem('clockedIn', 'false');
-          localStorage.setItem('clockOutTime', data.clockOutTime);
-          console.log(uid);
         })
         .catch((error) => {
           console.error('Error clocking out:', error);
         });
     } else {
-      axios.post('http://localhost:5000/clock-in', { username: name, uid: uid }) // Pass UID to the server
+      axios.post('http://localhost:5000/clock-in', { username: name, uid })
         .then((response) => {
           const { data } = response;
           setClockInTime(new Date(data.clockInTime));
           setClockedIn(true);
-          localStorage.setItem('clockedIn', 'true');
-          localStorage.setItem('clockInTime', data.clockInTime);
         })
         .catch((error) => {
           console.error('Error clocking in:', error);
@@ -88,14 +81,10 @@ function EmployeeDashSection({ name, uid }) {
         {clockedIn ? 'Clock Out' : 'Clock In'}
       </Button>
       {clockInTime && (
-        <p>
-          Clock In Time: {formatTime(clockInTime)}
-        </p>
+        <p>Clock In Time: {formatTime(clockInTime)}</p>
       )}
       {clockOutTime && (
-        <p>
-          Clock Out Time: {formatTime(clockOutTime)}
-        </p>
+        <p>Clock Out Time: {formatTime(clockOutTime)}</p>
       )}
     </div>
   );
